@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from typing import Optional
-
+from models_params import Blog
 app = FastAPI()
 
 
@@ -45,3 +45,7 @@ def blog(id:int): #Con esto le decimos que debe de ser estrictamente int
 def blog(id,limit=10):
     # Obtener comentarios del blog con el id = id
     return {"data": [1,2 ] }
+
+@app.post('/blog')
+def create_blog(blog:Blog): # El objeto es de la clase Blog que definimos con anterioridad
+    return {'data':f' El blog fue creado n {blog.title}'}

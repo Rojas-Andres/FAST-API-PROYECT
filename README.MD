@@ -18,3 +18,6 @@ pip install -r requeriments.txt
 # Prueba de blog enviando params
     - Published es un boolean
     http://localhost:8000/blog?limit=10&published=false
+
+Envio de params por el request body
+    - Se necesita pydentic y importar BaseModel

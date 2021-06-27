@@ -18,7 +18,9 @@ Activar el entorno virtual en windows
 # Instalar todos los paquetes necesarios
 
 pip install -r requirements.txt
+
 o
+
 pip3 install -r requirements.txt
 
 # Como iniciar proyecto ?

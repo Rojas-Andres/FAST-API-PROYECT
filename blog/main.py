@@ -24,6 +24,13 @@ def create(blog:BlogValidate,db:Session=Depends(get_db)):
     return new_blog
     #return {'Title':blog.title , 'Body':blog.body}
 
+@app.delete('/blog/{id}',status_code=status.HTTP_204_NO_CONTENT)
+def destroy(id,db:Session=Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id ).delete(synchronize_session=False)
+    db.commit()
+    return 'Realizado'
+
+
 @app.get('/blog')
 def get_all_blogs(db:Session=Depends(get_db)):
     blogs = db.query(Blog).all()

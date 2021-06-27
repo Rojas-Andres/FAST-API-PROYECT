@@ -23,3 +23,13 @@ def create(blog:BlogValidate,db:Session=Depends(get_db)):
     db.refresh(new_blog)
     return new_blog
     #return {'Title':blog.title , 'Body':blog.body}
+
+@app.get('/blog')
+def get_all_blogs(db:Session=Depends(get_db)):
+    blogs = db.query(Blog).all()
+    return blogs
+
+@app.get('/blog/{id}')
+def show(id,db:Session=Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id).first()
+    return blog

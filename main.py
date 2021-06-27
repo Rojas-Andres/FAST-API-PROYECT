@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from typing import Optional
 from models_params import Blog
+import uvicorn
 app = FastAPI()
 
 
@@ -49,3 +50,9 @@ def blog(id,limit=10):
 @app.post('/blog')
 def create_blog(blog:Blog): # El objeto es de la clase Blog que definimos con anterioridad
     return {'data':f' El blog fue creado n {blog.title}'}
+
+# Otra forma de ejecutar fastapi
+'''
+if __name__ == "__main__":
+    uvicorn.run(app,host="127.0.0.1", port=9000)
+'''

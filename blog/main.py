@@ -29,7 +29,7 @@ def create(blog:BlogValidate,db:Session=Depends(get_db)):
 @app.delete('/blog/{id}',status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id )
-    if not blog:
+    if not blog.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'No existe el blog con el id {id} por lo tanto no se elimino')
     blog.delete(synchronize_session=False)
     db.commit()
@@ -39,7 +39,8 @@ def destroy(id,db:Session=Depends(get_db)):
 @app.put('/blog/{id}',status_code=status.HTTP_202_ACCEPTED)
 def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
-    if not blog: 
+    print(blog)
+    if not blog.first(): 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'No existe el blog con el id {id} por lo tanto no se actualizo')
     #blog.update(request)
     blog.update({'title':request.title,'body':request.body})

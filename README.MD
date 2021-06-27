@@ -10,7 +10,9 @@ pip3 install virtualenv
 
 Crear el entorno virtual
 - virtualenv venv 
+
 Activar el entorno virtual en windows
+
 - .\venv\Scripts\activate.bat
 
 # Instalar todos los paquetes necesarios

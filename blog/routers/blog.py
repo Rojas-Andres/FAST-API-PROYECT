@@ -5,17 +5,20 @@ from blog.models import *
 from blog.database import get_db
 from sqlalchemy.orm import Session
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/blog',
+    tags=['Blogs']
+)
 
 
 #Obtener todos los blog
-@router.get('/blog', response_model = List[ShowBlog],tags=['blogs']) # Es una lista porque vamos a retornar multiples blogs no solo uno 
+@router.get('/', response_model = List[ShowBlog]) # Es una lista porque vamos a retornar multiples blogs no solo uno 
 def get_all_blogs(db:Session=Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
 #Crear un blog
-@router.post('/blog', status_code=status.HTTP_201_CREATED,tags=['blogs']) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
+@router.post('/', status_code=status.HTTP_201_CREATED) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
 def create(blog:BlogValidate,db:Session=Depends(get_db)):
     new_blog = Blog(title=blog.title,body=blog.body,user_id=1)
     db.add(new_blog)
@@ -25,7 +28,7 @@ def create(blog:BlogValidate,db:Session=Depends(get_db)):
     #return {'Title':blog.title , 'Body':blog.body}
 
 #Eliminar un blog
-@router.delete('/blog/{id}',status_code=status.HTTP_204_NO_CONTENT,tags=['blogs'])
+@router.delete('/{id}',status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id )
     if not blog.first():
@@ -35,7 +38,7 @@ def destroy(id,db:Session=Depends(get_db)):
     return 'Realizado'
 
 #Actualizar blog
-@router.put('/blog/{id}',status_code=status.HTTP_202_ACCEPTED,tags=['blogs'])
+@router.put('/{id}',status_code=status.HTTP_202_ACCEPTED)
 def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
     print(blog)
@@ -47,7 +50,7 @@ def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     return 'Actualizado'
 
 #Obtener un blog
-@router.get('/blog/{id}',status_code=200 , response_model=ShowBlog,tags=['blogs'])
+@router.get('/{id}',status_code=200 , response_model=ShowBlog)
 def show(id, response:Response, db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
     if not blog:

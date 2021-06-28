@@ -5,9 +5,13 @@ from blog.database import get_db
 from sqlalchemy.orm import Session
 from blog.hashing import Hash
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/user',
 
-@router.post('/user',response_model=ShowUserCreate,tags=['users'])
+    tags=['Users']
+)
+
+@router.post('/',response_model=ShowUserCreate)
 def create_user(request:UserValidate,db:Session=Depends(get_db)):
     if len(request.name) == 0 or len(request.email)==0 or len(request.password)==0:
         return "No se crea usuario , algun campo esta vacio"
@@ -18,7 +22,7 @@ def create_user(request:UserValidate,db:Session=Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-@router.get('/user/{id}',status_code=200 , response_model=ShowUser,tags=['users'])
+@router.get('/{id}',status_code=200 , response_model=ShowUser)
 def show(id:int, response:Response, db:Session=Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
     if not user:

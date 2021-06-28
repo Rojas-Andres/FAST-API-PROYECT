@@ -4,3 +4,4 @@ typing==3.7.4.3
 SQLAlchemy==1.4.19
 passlib==1.7.4
 bcrypt==3.2.0
+python-jose==3.3.0

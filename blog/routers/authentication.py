@@ -4,7 +4,7 @@ from blog.database import *
 from sqlalchemy.orm import Session
 from blog.models import *
 from blog.hashing import Hash
-
+from blog.token import *
 router = APIRouter(
     prefix='/login',
     tags=['Login']
@@ -17,5 +17,8 @@ def login(request:Login,db:Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'Credenciales invalidas')
     if not Hash.verify(user.password,request.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'Credenciales invalidas')
-
-    return user
+        #access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email}
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

@@ -5,7 +5,7 @@ from blog.models import *
 from blog.database import get_db
 from sqlalchemy.orm import Session
 from blog.repository import blog
-
+from blog.oauth2 import get_current_user
 router = APIRouter(
     prefix='/blog',
     tags=['Blogs']
@@ -14,12 +14,12 @@ router = APIRouter(
 
 #Obtener todos los blog
 @router.get('/', response_model = List[ShowBlog]) # Es una lista porque vamos a retornar multiples blogs no solo uno 
-def get_all_blogs(db:Session=Depends(get_db)):
+def get_all_blogs(db:Session=Depends(get_db),current_user:User =Depends(get_current_user)):
     return blog.get_all(db)
 
 #Crear un blog
 @router.post('/', status_code=status.HTTP_201_CREATED) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
-def create(request:BlogValidate,db:Session=Depends(get_db)):
+def create(request:BlogValidate,db:Session=Depends(get_db) ,get_current_user:User =Depends(get_current_user) ):
     return blog.create_blog(request,db)
 
 #Eliminar un blog

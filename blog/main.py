@@ -20,7 +20,7 @@ def get_db():
 #Crear un blog
 @app.post('/blog', status_code=status.HTTP_201_CREATED,tags=['blogs']) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
 def create(blog:BlogValidate,db:Session=Depends(get_db)):
-    new_blog = Blog(title=blog.title,body=blog.body)
+    new_blog = Blog(title=blog.title,body=blog.body,user_id=1)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)

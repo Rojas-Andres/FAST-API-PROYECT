@@ -74,7 +74,7 @@ def show(id, response:Response, db:Session=Depends(get_db)):
         '''
     return blog
 
-@app.post('/user',response_model=ShowUser,tags=['users'])
+@app.post('/user',response_model=ShowUserCreate,tags=['users'])
 def create_user(request:UserValidate,db:Session=Depends(get_db)):
     if len(request.name) == 0 or len(request.email)==0 or len(request.password)==0:
         return "No se crea usuario , algun campo esta vacio"

@@ -1,9 +1,11 @@
 from typing import List
 from fastapi import FastAPI,Depends,status,Response,HTTPException
-from blog.schemas import BlogValidate,ShowBlog
+from blog.schemas import *
 from blog.models import *
 from blog.database import engine,SessionLocal
 from sqlalchemy.orm import Session
+
+
 app = FastAPI()
 
 Base.metadata.create_all(bind=engine) # Esta linea crea todas las tablas en la base de datos al iniciar la app
@@ -72,3 +74,19 @@ def show(id, response:Response, db:Session=Depends(get_db)):
         return {'detalle':f'No existe el blog con el id {id}'}
         '''
     return blog
+
+@app.post('/user')
+def create_user(request:UserValidate,db:Session=Depends(get_db)):
+    new_user = User(name=request.name,email=request.email,password=request.password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+@app.get('/user/{id}',status_code=200 , response_model=ShowUser)
+def show(id, response:Response, db:Session=Depends(get_db)):
+    user = db.query(User).filter(User.id == id).first()
+    if not user:
+
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'No existe el usuario con el id {id}')
+
+    return user

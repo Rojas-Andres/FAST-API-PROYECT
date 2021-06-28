@@ -18,7 +18,7 @@ def get_db():
         db.close()
 
 #Crear un blog
-@app.post('/blog', status_code=status.HTTP_201_CREATED) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
+@app.post('/blog', status_code=status.HTTP_201_CREATED,tags=['blogs']) # Devolvemos el estatus de 201 que es generalmente cuando se crea 
 def create(blog:BlogValidate,db:Session=Depends(get_db)):
     new_blog = Blog(title=blog.title,body=blog.body)
     db.add(new_blog)
@@ -28,7 +28,7 @@ def create(blog:BlogValidate,db:Session=Depends(get_db)):
     #return {'Title':blog.title , 'Body':blog.body}
 
 #Eliminar un blog
-@app.delete('/blog/{id}',status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/blog/{id}',status_code=status.HTTP_204_NO_CONTENT,tags=['blogs'])
 def destroy(id,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id )
     if not blog.first():
@@ -38,7 +38,7 @@ def destroy(id,db:Session=Depends(get_db)):
     return 'Realizado'
 
 #Actualizar blog
-@app.put('/blog/{id}',status_code=status.HTTP_202_ACCEPTED)
+@app.put('/blog/{id}',status_code=status.HTTP_202_ACCEPTED,tags=['blogs'])
 def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id)
     print(blog)
@@ -50,13 +50,13 @@ def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     return 'Actualizado'
 
 #Obtener todos los blog
-@app.get('/blog', response_model = List[ShowBlog]) # Es una lista porque vamos a retornar multiples blogs no solo uno 
+@app.get('/blog', response_model = List[ShowBlog],tags=['blogs']) # Es una lista porque vamos a retornar multiples blogs no solo uno 
 def get_all_blogs(db:Session=Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
 #Obtener un blog
-@app.get('/blog/{id}',status_code=200 , response_model=ShowBlog)
+@app.get('/blog/{id}',status_code=200 , response_model=ShowBlog,tags=['blogs'])
 def show(id, response:Response, db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
     if not blog:
@@ -74,21 +74,19 @@ def show(id, response:Response, db:Session=Depends(get_db)):
         '''
     return blog
 
-@app.post('/user')
+@app.post('/user',response_model=ShowUser,tags=['users'])
 def create_user(request:UserValidate,db:Session=Depends(get_db)):
     if len(request.name) == 0 or len(request.email)==0 or len(request.password)==0:
         return "No se crea usuario , algun campo esta vacio"
-    #Hash a la contraseña
-
+    #Hash a la contraseña Hash.bcrypt
     new_user = User(name=request.name,email=request.email,password=Hash.bcrypt(request.password))
-    
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
-@app.get('/user/{id}',status_code=200 , response_model=ShowUser)
-def show(id, response:Response, db:Session=Depends(get_db)):
+@app.get('/user/{id}',status_code=200 , response_model=ShowUser,tags=['users'])
+def show(id:int, response:Response, db:Session=Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'No existe el usuario con el id {id}')

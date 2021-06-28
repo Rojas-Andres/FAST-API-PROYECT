@@ -4,9 +4,9 @@ from blog.models import *
 from blog.database import get_db
 from sqlalchemy.orm import Session
 from blog.repository import user
+
 router = APIRouter(
     prefix='/user',
-
     tags=['Users']
 )
 

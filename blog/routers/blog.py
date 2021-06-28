@@ -5,6 +5,7 @@ from blog.models import *
 from blog.database import get_db
 from sqlalchemy.orm import Session
 from blog.repository import blog
+
 router = APIRouter(
     prefix='/blog',
     tags=['Blogs']

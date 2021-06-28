@@ -40,3 +40,7 @@ class ShowBlog(BaseModel):
     creator:ShowUser
     class Config():
         orm_mode = True
+
+class Login(BaseModel):
+    email:str
+    password:str

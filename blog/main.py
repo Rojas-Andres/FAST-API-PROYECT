@@ -1,5 +1,6 @@
+from typing import List
 from fastapi import FastAPI,Depends,status,Response,HTTPException
-from blog.schemas import BlogValidate
+from blog.schemas import BlogValidate,ShowBlog
 from blog.models import *
 from blog.database import engine,SessionLocal
 from sqlalchemy.orm import Session
@@ -48,13 +49,13 @@ def update(id,request:BlogValidate ,db:Session=Depends(get_db)):
     return 'Actualizado'
 
 #Obtener todos los blog
-@app.get('/blog')
+@app.get('/blog', response_model = List[ShowBlog]) # Es una lista porque vamos a retornar multiples blogs no solo uno 
 def get_all_blogs(db:Session=Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
 #Obtener un blog
-@app.get('/blog/{id}',status_code=200)
+@app.get('/blog/{id}',status_code=200 , response_model=ShowBlog)
 def show(id, response:Response, db:Session=Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
     if not blog:

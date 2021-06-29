@@ -53,3 +53,11 @@ pip3 install -r requirements.txt
 
 Envio de params por el request body
     - Se necesita pydentic y importar BaseModel
+
+# Crear una cuenta en deta.sh para el deploy
+- curl -fsSL https://get.deta.dev/cli.sh | sh
+- comandos 
+    - deta -h
+    - deta login
+    - deta new -> ponemos todo en el servidor para ello se creo una carpeta (app) donde coloco las cosas esenciales del proyecto 
+    - deta deploy -> si hay cambios en el proyecto esto los sube 
